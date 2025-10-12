@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Teacher Code Generator</title>
+  <style>
+    body { font-family: Arial; text-align: center; margin-top: 50px; }
+    input, button { margin: 8px; padding: 6px; }
+    #result { margin-top: 20px; font-weight: bold; }
+    #loginForm, #codeForm { display: inline-block; text-align: left; }
+  </style>
+</head>
+<body>
+  <h1>Teacher Code Generator</h1>
+  <div id="loginSection">
+    <form id="loginForm">
+      <input type="text" id="teacherId" placeholder="Teacher ID" required><br>
+      <input type="password" id="teacherPwd" placeholder="Password" required><br>
+      <button type="submit">Login</button>
+    </form>
+    <div id="loginError" style="color:red;"></div>
+  </div>
+  <div id="codeSection" style="display:none;">
+    <form id="codeForm">
+      <input type="text" id="host" placeholder="Host (site to unblock)" required><br>
+      <input type="number" id="duration" placeholder="Duration (seconds)" value="3600" required><br>
+      <button type="submit">Generate Code</button>
+    </form>
+    <div id="result"></div>
+  </div>
+  <script>
+    // Example teacher credentials (not secure for real use)
+    const TEACHERS = {
+      'teacher1': 'password1',
+      'teacher2': 'password2'
+    };
+    // Login logic
+    document.getElementById('loginForm').onsubmit = function(e) {
+      e.preventDefault();
+      const tid = document.getElementById('teacherId').value;
+      const pwd = document.getElementById('teacherPwd').value;
+      if (TEACHERS[tid] && TEACHERS[tid] === pwd) {
+        document.getElementById('loginSection').style.display = 'none';
+        document.getElementById('codeSection').style.display = 'block';
+      } else {
+        document.getElementById('loginError').innerText = 'Invalid credentials.';
+      }
+    };
+    // Code generation logic
+    document.getElementById('codeForm').onsubmit = function(e) {
+      e.preventDefault();
+      const host = document.getElementById('host').value;
+      const duration = document.getElementById('duration').value;
+      const code = `${host}:${Math.floor(Date.now()/1000)}:${duration}`;
+      document.getElementById('result').innerHTML = 'Generated Code: <b>' + code + '</b>';
+    };
+  </script>
+</body>
+</html>
