@@ -1,8 +1,42 @@
 <!DOCTYPE html>
 <html>
-<head><title>Teacher Access</title></head>
-<body style="font-family:Arial;text-align:center;margin-top:50px;">
-  <h1>Teacher Portal</h1>
-  <p>Use this page to manage temporary unblocking codes.</p>
+<head>
+  <title>Teacher Code Generator</title>
+  <style>
+    body { font-family: Arial; text-align: center; margin-top: 50px; }
+    input, button { margin: 8px; padding: 6px; }
+    #result { margin-top: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>Teacher Code Generator</h1>
+  <form id="codeForm">
+    <input type="text" id="teacherId" placeholder="Teacher ID" required><br>
+    <input type="password" id="teacherPwd" placeholder="Password" required><br>
+    <input type="text" id="host" placeholder="Host (site to unblock)" required><br>
+    <input type="number" id="duration" placeholder="Duration (seconds)" value="3600" required><br>
+    <button type="submit">Generate Code</button>
+  </form>
+  <div id="result"></div>
+  <script>
+    document.getElementById('codeForm').onsubmit = async function(e) {
+      e.preventDefault();
+      const tid = document.getElementById('teacherId').value;
+      const pwd = document.getElementById('teacherPwd').value;
+      const host = document.getElementById('host').value;
+      const duration = document.getElementById('duration').value;
+      const response = await fetch('http://raspberrypi.local:5000/api/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tid, pwd, host, duration })
+      });
+      if (response.ok) {
+        const data = await response.json();
+        document.getElementById('result').innerHTML = 'Generated Code: <b>' + data.code + '</b>';
+      } else {
+        document.getElementById('result').innerText = 'Invalid credentials or error generating code.';
+      }
+    };
+  </script>
 </body>
 </html>
